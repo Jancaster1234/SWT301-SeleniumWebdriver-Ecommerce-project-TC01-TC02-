@@ -22,6 +22,8 @@ public class CartPage {
     By countryChosenOption = By.xpath("//*[@id='country']/option[234]");
     By regionChosenOption = By.xpath("//*[@id='region_id']/option[13]");
 
+    By updateQuantityButton = By.xpath("//*[@id=\"shopping-cart-table\"]/tbody/tr/td[4]/button/span/span");
+
     public CartPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -50,6 +52,11 @@ public class CartPage {
         dropdown.selectByVisibleText(option.getText());
     }
 
+    public void inputValueQuantityLocator(String value){
+        WebElement quantityInput = driver.findElement(quantityLocator);
+        quantityInput.clear();
+        quantityInput.sendKeys(value);
+    }
 
     public String getValueOfQuantityLocator() {
         WebElement quantityInput = driver.findElement(quantityLocator);
@@ -70,6 +77,9 @@ public class CartPage {
         driver.findElement(estimateShippingButton).click();
     }
 
+    public void clickUpdateQuantityButton() {
+        driver.findElement(updateQuantityButton).click();
+    }
 //    public String getShippingCost() {
 //        return driver.findElement(shippingCostLabel).getText();
 //    }
