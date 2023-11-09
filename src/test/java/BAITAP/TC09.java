@@ -10,7 +10,7 @@ import org.testng.AssertJUnit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import static org.testng.Assert.assertNotEquals;
+
 public class TC09 {
     @Test
     public void TC09() {
@@ -35,10 +35,7 @@ public class TC09 {
 
             //Step 4. Verify the discount generated
             System.out.println(cartPage.discountGenerated());
-            double totalCost = parseCurrencyToDouble(cartPage.getTotalCost());
-            double subtotal = parseCurrencyToDouble(cartPage.getSubtotalLabel());
-
-            assertNotEquals(subtotal, totalCost, 0.01);
+            AssertJUnit.assertFalse(cartPage.discountGenerated().isEmpty());
             Thread.sleep(1000);
             captureScreenshot(driver, "TC09.png");
             cartPage.verifyDiscount(oldGrand);
@@ -69,12 +66,5 @@ public class TC09 {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static double parseCurrencyToDouble(String currencyString) {
-        // Remove currency symbols, commas, and other non-numeric characters
-        String cleanedString = currencyString.replaceAll("[^0-9.]", "");
-        // Parse the cleaned string as a double
-        return Double.parseDouble(cleanedString);
     }
 }
