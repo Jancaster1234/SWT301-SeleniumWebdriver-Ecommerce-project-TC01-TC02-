@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.AssertJUnit;
 
 public class CartPage {
     WebDriver driver;
@@ -22,21 +23,50 @@ public class CartPage {
     By countryChosenOption = By.xpath("//*[@id='country']/option[234]");
     By regionChosenOption = By.xpath("//*[@id='region_id']/option[13]");
 
+    By grandTotal = By.cssSelector("strong span[class='price']");
     By updateQuantityButton = By.xpath("//*[@id=\"shopping-cart-table\"]/tbody/tr/td[4]/button/span/span");
+
+    By applyDiscount = By.cssSelector("button[title='Apply'] span span");
+    By discount = By.id("coupon_code");
+    By iphoneAddToCart = By.cssSelector("body > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > ul:nth-child(2) > li:nth-child(1) > div:nth-child(2) > div:nth-child(4) > button:nth-child(1) > span:nth-child(1) > span:nth-child(1)");
+
+    By discountGenerated = By.cssSelector("tbody tr:nth-child(2) td:nth-child(2) span:nth-child(1)");
+    public String getInitGrandTotal(){
+        return  driver.findElement(grandTotal).getText().replaceAll("[$,]", "");
+
+    }
+
+    public void addIphoneToCart(){
+        WebElement btn = driver.findElement(iphoneAddToCart);
+        btn.click();
+    }
+
+    public void enterDiscountCode(String key){
+        WebElement discountCode = driver.findElement(discount);
+        discountCode.sendKeys(key);
+    }
+
+    public void clickApplyDiscount(){
+        WebElement apply = driver.findElement(applyDiscount);
+        apply.click();
+    }
+
+    public String discountGenerated(){
+        WebElement discount = driver.findElement(discountGenerated);
+        String discountStr = discount.getText().replaceAll("[-$,]", "");
+        return (discountStr);
+    }
+
+    public void verifyDiscount(double oldGrand){
+        double expected = oldGrand - Double.parseDouble(discountGenerated());
+        double actual = Double.parseDouble(getInitGrandTotal());
+        AssertJUnit.assertEquals(expected,actual);
+    }
 
     public CartPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    //    public void selectCountry(String country) {
-//        driver.findElement(countryDropdown).click();
-//        driver.findElement(By.xpath("//option[text()='" + country + "']")).click();
-//    }
-//
-//    public void selectState(String state) {
-//        driver.findElement(stateDropdown).click();
-//        driver.findElement(By.xpath("//option[text()='" + state + "']")).click();
-//    }
     public void selectCountryByXPath(String xpath) {
         WebElement countryDropdow = driver.findElement(countryDropdown);
         Select dropdown = new Select(countryDropdow);
